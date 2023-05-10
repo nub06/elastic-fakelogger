@@ -1,0 +1,9 @@
+version: '3'
+services:
+  fakelogger:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ELASTIC_URL: <ELASTIC ENDPOINT>
+      LOG_DURATION: 1
