@@ -21,7 +21,7 @@ fakelogger is a simple and useful Python script to test Elastic and Kibana. It g
 
 - If Elasticsearch is also running as a Docker container, you may not be able to access it at localhost:9200. In this case, you can modify the Docker Compose file to run Elasticsearch, Kibana, and Fakelogger on the same network, or alternatively, try using the server IP instead of localhost.
 
-- Instead of creating an index for fakelogger, you can define the `ELASTIC_URL` as `<elasticendpoint>/fakeloggerindex/customlog` to enable Kibana to create an index.
+- Instead of creating an index for fakelogger, you can define the `ELASTIC_URL` as `<elasticendpoint>/fakeloggerindex/_doc` to enable Kibana to create an index.
 
 - Go to `<kibanaendpoint>/app/management/kibana/indexPatterns`, click on Create Index Pattern, and create fakeloggerindex.
 
