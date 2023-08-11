@@ -4,7 +4,7 @@ import json
 import os
 import time
 import requests
-
+import uuid
 
 def err_source_generator():
     error_sources = [
@@ -19,16 +19,12 @@ def err_source_generator():
 def err_message_generator():
     error_messages = [
         "Invalid input",
-        "Unexpected error occurred",
-        "Service temporarily unavailable",
         "Database connection failed",
         "Resource not found",
         "Unauthorized access",
-        "Request timeout exceeded",
-        "Internal server error"
+        "Request timeout exceeded"
     ]
     return random.choice(error_messages)
-
 
 def err_type_generator():
     error_types = [
@@ -42,9 +38,7 @@ def err_type_generator():
         "DateTimeException",
         "SecurityException",
     ]
-
     return random.choice(error_types)
-
 
 def generate_error_message():
     http_error_codes = [400, 401, 403, 404, 500, 502, 503, 504]
@@ -65,24 +59,28 @@ def generate_error_message():
 
     return " ".join(lines)
 
-
 def log_generator():
     log_levels = ["WARNING", "INFO", "DEBUG", "ERROR"]
     log_level = random.choice(log_levels)
 
     if log_level == "ERROR":
         log_message = generate_error_message()
+        log_type = err_type_generator() 
     else:
         log_message = f"This is a {log_level} level log message."
+        log_type = "-"  
 
     log = {
-        "timestamp": (datetime.datetime.now(datetime.timezone.utc).isoformat()),
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "log_level": log_level,
-        "log_message": log_message
+        "log_message": log_message,
+        "source": random.choice(["Server", "Client"]),
+        "type": log_type,  
+        "user_id": random.randint(1, 100),
+        "request_id": str(uuid.uuid4())[:16]  
     }
-    json_log = json.dumps(log)
-    return json_log
 
+    return json.dumps(log)
 
 def log_sender(log, session, url):
     headers = {'Content-Type': 'application/json'}
@@ -91,7 +89,6 @@ def log_sender(log, session, url):
         print('Logs sent successfully.')
     else:
         print('Error sending logs:', response.text)
-
 
 def main():
     url = os.environ.get('ELASTIC_URL')
@@ -114,7 +111,6 @@ def main():
             if log_duration is not None:
                 duration = int(log_duration)
                 time.sleep(duration)
-
 
 if __name__ == '__main__':
     main()
